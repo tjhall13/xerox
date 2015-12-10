@@ -1,0 +1,28 @@
+{
+  "name": "xerox",
+  "version": "0.1.0",
+  "description": "Xerox is a unit testing mock framework.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tjhall13/xerox.git"
+  },
+  "keywords": [
+    "xerox",
+    "mock",
+    "stub",
+    "unit",
+    "test",
+    "proxyquire",
+    "proxy"
+  ],
+  "author": "Trevor Hall",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tjhall13/xerox/issues"
+  },
+  "homepage": "https://github.com/tjhall13/xerox#readme"
+}
