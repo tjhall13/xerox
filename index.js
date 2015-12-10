@@ -1,8 +1,20 @@
+var constructors = { };
+
+function Context() {
+	this.properties = { };
+}
+
 function Template(test, func, method) {
-	var context = { };
+	var context = new Context();
 	var sequence = [];
 	var index = 0;
-	func.prototype[method] = function() {
+	if(method == '@construct') {
+		constructors[func] = validator;
+	} else {
+		func.prototype[method] = validator;
+	}
+	
+	function validator() {
 		if(index === 0) {
 			sequence.push(context);
 		}
@@ -25,6 +37,9 @@ function Template(test, func, method) {
 		if(context.err) {
 			throw context.err;
 		} else {
+			for(var property in context.properties) {
+				this[property] = context.properties[property];
+			}
 			if(context.cb && callback) {
 				process.nextTick(function() {
 					callback(context.cb.err, context.cb.val);
@@ -44,25 +59,44 @@ function Template(test, func, method) {
 		context.err = error;
 		return this;
 	};
-	this.yields = function(value) {
-		context.val = value;
+	this.sets = function(property, value) {
+		context.properties[property] = value;
 		return this;
 	};
-	this.callback = function(error, value) {
-		context.cb = { err: error, val: value };
-		return this;
-	};
+	if(method != '@construct') {
+		this.yields = function(value) {
+			context.val = value;
+			return this;
+		};
+		this.callback = function(error, value) {
+			context.cb = { err: error, val: value };
+			return this;
+		};
+	}
 	this.then = function() {
 		sequence.push(context);
-		context = { };
+		context = new Context();
 		return this;
 	};
 }
 
 function Xerox(name) {
-	var Document = function() { };
+	var Document = function() {
+		if(typeof constructors[name] == 'function') {
+			constructors[name].apply(this, arguments);
+		}
+	};
+	this.print = function() {
+		var output = Object.create(Document.prototype);
+		Document.apply(output, arguments);
+		return output;
+	};
 	this.copy = function(test, method) {
-		return new Template(test, Document, method);
+		if(method == '@construct') {
+			return new Template(test, name, method);
+		} else {
+			return new Template(test, Document, method);
+		}
 	};
 	Xerox.documents[name] = Document;
 }

@@ -75,6 +75,7 @@ Creates new template to mock on the provided `Document` with a given name.
   * `actual`: actual value
   * `msg`: optional message to provide
 * `method` <`String`>: method name to be added to the prototype.
+  * If method is `'@construct'` then the constructor for this class is mocked.
 
 **Returns:**
 * <`Template`>: Template to set mock parameters.
@@ -96,6 +97,16 @@ Sets err that the next invocation will throw after parameters have been verified
 
 **Parameters:**
 * `err`: The error to be thrown.
+
+**Returns:**
+* <`Template`>: Template it was invoked on to allow chaining.
+
+#### `Template#sets(property, value)`
+Sets a property with the given name and value to the object this object was invoked on.
+
+**Parameters:**
+* `property`: The property name to be set.
+* `value`: The value for the property to be set.
 
 **Returns:**
 * <`Template`>: Template it was invoked on to allow chaining.
