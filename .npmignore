@@ -1,0 +1,6 @@
+# config
+.npm*
+.git*
+
+# build
+Gruntfile.js
