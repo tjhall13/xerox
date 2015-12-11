@@ -130,6 +130,15 @@ Sets callback parameters that will be called from next invocation.  If the last 
 **Returns:**
 * <`Template`>: Template it was invoked on to allow chaining.
 
+#### `Template#calls(method)`
+Adds a function to be called to a queue.  Each method will be called when the mocked function is invoked.
+
+**Parameters:**
+* `method` <`Function`>: The function to be called on invocation.
+
+**Returns:**
+* <`Template`>: Template it was invoked on to allow chaining.
+
 #### `Template#then()`
 Returns a new instance of the invocation to test. This instance will be used on the invocation after the previous instance.
 

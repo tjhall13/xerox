@@ -1,11 +1,12 @@
 var constructors = { };
 
-function Context() {
+function Context(template) {
 	this.properties = { };
+	this.later = [];
 }
 
 function Template(test, func, method) {
-	var context = new Context();
+	var context = new Context(this);
 	var sequence = [];
 	var index = 0;
 	if(method == '@construct') {
@@ -45,6 +46,9 @@ function Template(test, func, method) {
 					callback(context.cb.err, context.cb.val);
 				});
 			}
+			for(var i = 0; i < context.later.length; i++) {
+				context.later[i].call();
+			}
 			if(context.val) {
 				return context.val;
 			}
@@ -73,6 +77,10 @@ function Template(test, func, method) {
 			return this;
 		};
 	}
+	this.calls = function(callback) {
+		context.later.push(callback);
+		return this;
+	};
 	this.then = function() {
 		sequence.push(context);
 		context = new Context();
@@ -86,10 +94,14 @@ function Xerox(name) {
 			constructors[name].apply(this, arguments);
 		}
 	};
-	this.print = function() {
-		var output = Object.create(Document.prototype);
-		Document.apply(output, arguments);
-		return output;
+	this.print = function(method, val, cb) {
+		var template = new Template(null, Document, method);
+		if(cb) {
+			template.callback(cb.err, cb.val);
+		}
+		if(val) {
+			template.yields(val);
+		}
 	};
 	this.copy = function(test, method) {
 		if(method == '@construct') {
