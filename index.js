@@ -25,13 +25,13 @@ function Template(test, func, method) {
 		index++;
 
 		var inputs = Array.prototype.slice.call(arguments);
-		var callback;
+		var callback, i;
 		if(context.cb && typeof inputs[inputs.length - 1] == 'function') {
 			callback = inputs[inputs.length - 1];
 			inputs.pop();
 		}
 		if(context.args) {
-			for(var i = 0; i < context.args.length; i++) {
+			for(i = 0; i < context.args.length; i++) {
 				test(context.args[i], inputs[i]);
 			}
 		}
@@ -46,14 +46,14 @@ function Template(test, func, method) {
 					callback(context.cb.err, context.cb.val);
 				});
 			}
-			for(var i = 0; i < context.later.length; i++) {
+			for(i = 0; i < context.later.length; i++) {
 				context.later[i].call();
 			}
 			if(context.val) {
 				return context.val;
 			}
 		}
-	};
+	}
 
 	this.expects = function() {
 		context.args = arguments;
