@@ -1,6 +1,6 @@
 {
   "name": "xerox",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Xerox is a unit testing mock framework.",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,7 @@
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-jshint": "^0.11.3",
+    "grunt-contrib-nodeunit": "^0.4.1",
     "grunt-sloc": "^0.6.0"
   }
 }

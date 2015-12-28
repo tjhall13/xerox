@@ -1,3 +1,5 @@
+var util = require('util');
+
 var constructors = { };
 
 function Context(template) {
@@ -12,7 +14,7 @@ function Template(test, func, method) {
 	if(method == '@construct') {
 		constructors[func] = validator;
 	} else {
-		func.prototype[method] = validator;
+		func[method] = validator;
 	}
 	
 	function validator() {
@@ -88,30 +90,47 @@ function Template(test, func, method) {
 	};
 }
 
+function Copier(proto) {
+	this._prototype = proto;
+}
+
+Copier.prototype.copy = function(test, method) {
+	return new Template(test, this._prototype, method);
+};
+
+Copier.prototype.print = function(method, val, cb) {
+	var template = new Template(null, this._prototype, method);
+	if(cb) {
+		template.callback(cb.err, cb.val);
+	}
+	if(val) {
+		template.yields(val);
+	}
+	return template;
+};
+
 function Xerox(name) {
 	var Document = function() {
 		if(typeof constructors[name] == 'function') {
 			constructors[name].apply(this, arguments);
 		}
 	};
-	this.print = function(method, val, cb) {
-		var template = new Template(null, Document, method);
-		if(cb) {
-			template.callback(cb.err, cb.val);
-		}
-		if(val) {
-			template.yields(val);
-		}
-	};
+	Xerox.documents[name] = Document;
+	Copier.call(this, Document.prototype);
 	this.copy = function(test, method) {
 		if(method == '@construct') {
-			return new Template(test, name, method);
+			return new Xerox.Template(test, name, method);
 		} else {
-			return new Template(test, Document, method);
+			return new Xerox.Template(test, Document.prototype, method);
 		}
 	};
-	Xerox.documents[name] = Document;
+	this.document = function(doc) {
+		return new Copier(doc);
+	};
 }
+util.inherits(Xerox, Copier);
+
 Xerox.documents = { };
+Xerox.Template = Template;
 
 module.exports = Xerox;

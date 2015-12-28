@@ -3,7 +3,13 @@ module.exports = function(grunt) {
 		jshint: {
 			options: { },
 			development: {
-				src: ['index.js', 'Gruntfile.js']
+				src: ['index.js', 'Gruntfile.js', 'test/*.js']
+			}
+		},
+		nodeunit: {
+			options: { },
+			development: {
+				src: ['test/*.js']
 			}
 		},
 		sloc: {
@@ -12,14 +18,15 @@ module.exports = function(grunt) {
 			},
 			development: {
 				files: {
-					'./': ['index.js']
+					'./': ['index.js', 'test/*.js']
 				}
 			}
 		}
 	});
 
 	grunt.loadNpmTasks('grunt-sloc');
+	grunt.loadNpmTasks('grunt-contrib-nodeunit');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 
-	grunt.registerTask('default', ['jshint', 'sloc']);
+	grunt.registerTask('default', ['jshint', 'nodeunit', 'sloc']);
 };
